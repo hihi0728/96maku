@@ -14,29 +14,60 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       min-height: 100vh;
       text-align: center;
       overflow-x: hidden;
     }
+
+    /* 左上ロゴ */
+    header {
+      position: fixed;
+      top: 20px;
+      left: 40px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    header a {
+      text-decoration: none;
+      color: #000;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    header a:hover {
+      opacity: 0.6;
+    }
+
+    main {
+      margin-top: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+
     h1 {
       font-size: 3rem;
       font-weight: 700;
       letter-spacing: -0.04em;
       margin: 0.5em 0 0.3em;
     }
+
     h2 {
       font-weight: 400;
       color: #555;
       margin: 0;
       font-size: 1.2rem;
     }
+
     img {
       margin: 2rem 0;
       max-width: 80%;
       border-radius: 16px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     }
+
     p {
       color: #333;
       line-height: 1.7;
@@ -44,34 +75,43 @@
       font-size: 1.05rem;
       margin-bottom: 2rem;
     }
+
     footer {
       font-size: 0.8rem;
       color: #888;
-      margin-top: 3rem;
+      margin: 2rem 0;
     }
+
     a {
       color: #000;
       text-decoration: none;
       border-bottom: 1px solid #000;
       transition: opacity 0.2s ease;
     }
+
     a:hover {
       opacity: 0.6;
     }
   </style>
 </head>
 <body>
-  <h1>ReDesktopCalendar</h1>
-  <h2>macOSのデスクトップに溶け込む美しいカレンダー。</h2>
+  <header>
+    <a href="https://www.96maku.com">96MAKU.COM</a>
+  </header>
+
+  <main>
+    <h1>ReDesktopCalendar</h1>
+    <h2>macOSのデスクトップに溶け込む美しいカレンダー。</h2>
   
-  <img src="screenshot.png" alt="ReDesktopCalendar プレビュー" />
+    <img src="screenshot.png" alt="ReDesktopCalendar プレビュー" />
 
-  <p>
-    トリプルクリックで「編集モード」と「背景モード」を切り替え。<br>
-    あなたのデスクトップを、スケジュールで整える。
-  </p>
+    <p>
+      トリプルクリックで「編集モード」と「背景モード」を切り替え。<br>
+      あなたのデスクトップを、スケジュールで整える。
+    </p>
 
-  <p><a href="mailto:support@96maku.com">お問い合わせはこちら</a></p>
+    <p><a href="mailto:support@96maku.com">お問い合わせはこちら</a></p>
+  </main>
 
   <footer>© 2025 96MAKU</footer>
 </body>
