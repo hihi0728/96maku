@@ -1,70 +1,1052 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReDesktopCalendar | 96MAKU</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #fff;
-      color: #000;
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-    }
-    h1 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      font-size: 1.1rem;
-      color: #333;
-      line-height: 1.8;
-      margin: 0.5rem 0 2rem;
-      max-width: 600px;
-    }
-    hr {
-      width: 60px;
-      height: 1px;
-      background: #ccc;
-      border: none;
-      margin: 1.5rem 0;
-    }
-    footer {
-      font-size: 0.8rem;
-      color: #888;
-      position: fixed;
-      bottom: 20px;
-    }
-    a {
-      color: #000;
-      text-decoration: none;
-      border-bottom: 1px solid #000;
-      padding-bottom: 2px;
-      transition: opacity 0.2s ease;
-    }
-    a:hover {
-      opacity: 0.6;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReDesktopCalendar | 96MAKU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #fefefe;
+            --off-white: #f5f5f7;
+            --gray-50: #fafafa;
+            --gray-100: #e8e8ed;
+            --gray-200: #d2d2d7;
+            --gray-400: #86868b;
+            --gray-600: #6e6e73;
+            --gray-800: #424245;
+            --near-black: #1d1d1f;
+            --black: #0a0a0a;
+            --accent: #0071e3;
+            --accent-soft: rgba(0, 113, 227, 0.06);
+            --font-display: 'Sora', -apple-system, sans-serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 60px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--white);
+            color: var(--near-black);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ═══ NAVIGATION ═══ */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(254, 254, 254, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 40px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.03em;
+            color: var(--near-black);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-brand-icon {
+            width: 26px;
+            height: 26px;
+            background: var(--near-black);
+            border-radius: 7px;
+            display: grid;
+            place-items: center;
+        }
+
+        .nav-brand-icon::after {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid rgba(255,255,255,0.9);
+            border-radius: 3px;
+        }
+
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+
+        .nav-links a {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: color 0.25s;
+        }
+
+        .nav-links a:hover { color: var(--near-black); }
+
+        /* ═══ HERO ═══ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 40px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 560px;
+            height: 480px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 1px;
+            opacity: 0;
+            animation: gridReveal 2s ease 0.6s forwards;
+        }
+
+        .grid-cell {
+            border-radius: 4px;
+            background: var(--off-white);
+            opacity: 0;
+            animation: cellFade 0.4s ease forwards;
+        }
+
+        @keyframes cellFade { to { opacity: 1; } }
+        @keyframes gridReveal { to { opacity: 0.35; } }
+
+        .hero-content { position: relative; z-index: 2; }
+
+        .hero-app-icon {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 44px;
+            opacity: 0;
+            animation: iconIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        .hero-app-icon-inner {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #1a1a1e 0%, #2d2d32 100%);
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        .icon-calendar { width: 42px; height: 42px; }
+
+        .icon-calendar-header {
+            height: 10px;
+            background: #e34040;
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+
+        .icon-calendar-pin {
+            width: 3px; height: 6px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 1.5px;
+            margin-top: -3px;
+        }
+
+        .icon-calendar-body {
+            height: 32px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 0 0 4px 4px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 1px;
+            padding: 4px;
+        }
+
+        .icon-calendar-dot { border-radius: 1px; background: rgba(0,0,0,0.08); }
+        .icon-calendar-dot.today { background: #0071e3; border-radius: 50%; }
+
+        @keyframes iconIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.94); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(44px, 7vw, 72px);
+            font-weight: 700;
+            letter-spacing: -0.045em;
+            line-height: 1.04;
+            color: var(--black);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: textUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        }
+
+        .hero .tagline {
+            font-size: clamp(17px, 2.2vw, 21px);
+            font-weight: 300;
+            color: var(--gray-600);
+            letter-spacing: -0.01em;
+            line-height: 1.55;
+            max-width: 480px;
+            margin: 0 auto 48px;
+            opacity: 0;
+            animation: textUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+        }
+
+        @keyframes textUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            opacity: 0;
+            animation: textUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+        }
+
+        .meta-chip {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+
+        .meta-chip svg { width: 16px; height: 16px; opacity: 0.5; }
+        .meta-divider { width: 1px; height: 16px; background: var(--gray-200); }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: textUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+        }
+
+        .scroll-line {
+            width: 1px; height: 32px;
+            position: relative;
+            overflow: hidden;
+            background: var(--gray-200);
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gray-800);
+            animation: scrollPulse 2s ease infinite;
+        }
+
+        @keyframes scrollPulse {
+            0% { top: -100%; }
+            50% { top: 100%; }
+            100% { top: 100%; }
+        }
+
+        /* ═══ FEATURE SECTION ═══ */
+        .section-feature {
+            padding: 120px 40px;
+            background: var(--off-white);
+            position: relative;
+        }
+
+        .section-feature::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gray-200), transparent);
+        }
+
+        .section-wrap { max-width: 860px; margin: 0 auto; }
+
+        .section-eyebrow {
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-heading {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .section-sub {
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--gray-600);
+            line-height: 1.6;
+            max-width: 520px;
+            margin-bottom: 64px;
+        }
+
+        .feature-highlight {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .feature-visual {
+            aspect-ratio: 4 / 3;
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid var(--gray-100);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02), 0 8px 32px rgba(0,0,0,0.04);
+            display: grid;
+            place-items: center;
+        }
+
+        .mock-calendar {
+            width: 80%; height: 76%;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mock-cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .mock-cal-month {
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .mock-cal-arrows { display: flex; gap: 4px; }
+
+        .mock-cal-arrows span {
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--off-white);
+            display: grid;
+            place-items: center;
+            font-size: 10px;
+            color: var(--gray-600);
+        }
+
+        .mock-cal-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+
+        .mock-cal-days span {
+            font-size: 9px;
+            text-align: center;
+            color: var(--gray-400);
+            font-weight: 500;
+            padding: 2px 0;
+        }
+
+        .mock-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            flex: 1;
+        }
+
+        .mock-day {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 10px;
+            color: var(--gray-800);
+        }
+
+        .mock-day.muted { color: var(--gray-200); }
+        .mock-day.today { background: var(--accent); color: white; font-weight: 600; }
+
+        .feature-text h3 {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            margin-bottom: 14px;
+        }
+
+        .feature-text p {
+            font-size: 15px;
+            font-weight: 300;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .feature-mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .feature-mini {
+            padding: 20px;
+            background: var(--white);
+            border-radius: 14px;
+            border: 1px solid var(--gray-100);
+        }
+
+        .feature-mini h4 {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .feature-mini p {
+            font-size: 13px;
+            font-weight: 300;
+            color: var(--gray-600);
+            line-height: 1.55;
+        }
+
+        /* Triple-click demo */
+        .demo-interaction {
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(145deg, #1a1a1e, #2a2a2f);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-interaction::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+            pointer-events: none;
+        }
+
+        .demo-mode-label {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .demo-mode-switch {
+            display: flex;
+            background: rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 2px;
+        }
+
+        .demo-mode-btn {
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.4);
+            transition: all 0.4s ease;
+        }
+
+        .demo-mode-btn.active {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.95);
+        }
+
+        .demo-hint {
+            font-size: 12px;
+            color: rgba(255,255,255,0.2);
+            font-weight: 300;
+        }
+
+        .demo-cursor {
+            width: 18px; height: 18px;
+            position: absolute;
+            bottom: 42%; left: 50%;
+            animation: cursorTriple 3s ease-in-out infinite;
+        }
+
+        .demo-cursor svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+        @keyframes cursorTriple {
+            0%, 100% { transform: translate(-50%, 0); opacity: 0.7; }
+            15% { transform: translate(-50%, -2px); opacity: 1; }
+            18% { transform: translate(-50%, 0); opacity: 0.7; }
+            25% { transform: translate(-50%, -2px); opacity: 1; }
+            28% { transform: translate(-50%, 0); opacity: 0.7; }
+            35% { transform: translate(-50%, -2px); opacity: 1; }
+            38% { transform: translate(-50%, 0); opacity: 0.7; }
+        }
+
+        /* ═══ PRIVACY ═══ */
+        .section-privacy { padding: 120px 40px; background: var(--white); }
+
+        .privacy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 56px;
+        }
+
+        .privacy-card {
+            padding: 32px;
+            border-radius: 18px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-100);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+        }
+
+        .privacy-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+        }
+
+        .privacy-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: var(--accent-soft);
+            display: grid;
+            place-items: center;
+            margin-bottom: 18px;
+        }
+
+        .privacy-icon svg { width: 18px; height: 18px; color: var(--accent); }
+
+        .privacy-card h3 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .privacy-card p {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--gray-600);
+            line-height: 1.65;
+        }
+
+        .privacy-note {
+            margin-top: 32px;
+            font-size: 12px;
+            color: var(--gray-400);
+            font-weight: 300;
+        }
+
+        .privacy-full {
+            margin-top: 48px;
+            border-top: 1px solid var(--gray-100);
+            padding-top: 48px;
+        }
+
+        .privacy-full-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: opacity 0.2s;
+        }
+
+        .privacy-full-toggle:hover { opacity: 0.7; }
+        .privacy-full-toggle svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
+        .privacy-full-toggle.open svg { transform: rotate(180deg); }
+
+        .privacy-full-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .privacy-full-body.open { max-height: 2000px; }
+
+        .privacy-full-content { padding-top: 28px; }
+
+        .privacy-full-content h4 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 600;
+            margin: 28px 0 10px;
+        }
+
+        .privacy-full-content h4:first-child { margin-top: 0; }
+
+        .privacy-full-content p {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        /* ═══ SUPPORT ═══ */
+        .section-support {
+            padding: 120px 40px;
+            background: var(--off-white);
+            position: relative;
+        }
+
+        .section-support::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gray-200), transparent);
+        }
+
+        .support-box {
+            max-width: 520px;
+            margin: 56px auto 0;
+            text-align: center;
+        }
+
+        .support-icon-wrap {
+            width: 64px; height: 64px;
+            margin: 0 auto 28px;
+            border-radius: 18px;
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+        }
+
+        .support-icon-wrap svg { width: 26px; height: 26px; color: var(--gray-800); }
+
+        .support-box h3 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .support-box > p {
+            font-size: 15px;
+            font-weight: 300;
+            color: var(--gray-600);
+            line-height: 1.65;
+            margin-bottom: 32px;
+        }
+
+        .support-email-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 36px;
+            background: var(--near-black);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 100px;
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .support-email-btn:hover {
+            background: var(--black);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .support-email-btn svg { width: 16px; height: 16px; }
+
+        /* ═══ FOOTER ═══ */
+        footer {
+            padding: 40px;
+            text-align: center;
+            background: var(--white);
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            font-size: 12px;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: color 0.25s;
+        }
+
+        .footer-links a:hover { color: var(--near-black); }
+        .footer-copy { font-size: 12px; color: var(--gray-400); font-weight: 300; }
+
+        /* ═══ SCROLL ANIMATIONS ═══ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.08s; }
+        .reveal-delay-2 { transition-delay: 0.16s; }
+        .reveal-delay-3 { transition-delay: 0.24s; }
+        .reveal-delay-4 { transition-delay: 0.32s; }
+
+        /* ═══ RESPONSIVE ═══ */
+        @media (max-width: 768px) {
+            .nav-inner { padding: 0 20px; }
+            .hero { padding: 120px 24px 80px; }
+            .hero-grid { width: 360px; height: 320px; }
+            .hero-meta { flex-direction: column; gap: 12px; }
+            .meta-divider { display: none; }
+            .section-feature, .section-privacy, .section-support { padding: 80px 24px; }
+            .feature-highlight { grid-template-columns: 1fr; gap: 32px; }
+            .feature-highlight[style*="rtl"] { direction: ltr !important; }
+            .feature-highlight[style*="rtl"] .feature-text { direction: ltr !important; }
+            .feature-highlight[style*="rtl"] .demo-interaction { direction: ltr !important; }
+            .privacy-grid { grid-template-columns: 1fr; }
+            .feature-mini-grid { grid-template-columns: 1fr; }
+            footer { padding: 32px 24px; }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links { gap: 16px; }
+            .nav-links a { font-size: 12px; }
+        }
+    </style>
 </head>
 <body>
-  <h1>ReDesktopCalendar</h1>
-  <p>macOSのデスクトップに溶け込む、シンプルで美しいカレンダーアプリ。<br>
-     トリプルクリックで「編集モード」と「背景モード」を切り替えられます。</p>
 
-  <hr>
+<!-- Navigation -->
+<nav>
+    <div class="nav-inner">
+        <div class="nav-brand">
+            <div class="nav-brand-icon"></div>
+            ReDesktopCalendar
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">機能</a></li>
+            <li><a href="#privacy">プライバシー</a></li>
+            <li><a href="#support">サポート</a></li>
+        </ul>
+    </div>
+</nav>
 
-  <p><a href="mailto:support@96maku.com">サポートへのお問い合わせ</a></p>
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-grid" id="heroGrid"></div>
+    <div class="hero-content">
+        <div class="hero-app-icon">
+            <div class="hero-app-icon-inner">
+                <div class="icon-calendar">
+                    <div class="icon-calendar-header">
+                        <div class="icon-calendar-pin"></div>
+                        <div class="icon-calendar-pin"></div>
+                    </div>
+                    <div class="icon-calendar-body">
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot today"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                        <div class="icon-calendar-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h1>ReDesktopCalendar</h1>
+        <p class="tagline">macOSのデスクトップに溶け込む、<br>シンプルで美しいカレンダーアプリ。</p>
+        <div class="hero-meta">
+            <div class="meta-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>
+                macOS Native
+            </div>
+            <div class="meta-divider"></div>
+            <div class="meta-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                プライバシー重視
+            </div>
+            <div class="meta-divider"></div>
+            <div class="meta-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                軽量・高速
+            </div>
+        </div>
+    </div>
+    <div class="scroll-hint"><div class="scroll-line"></div></div>
+</section>
 
-  <footer>© 2025 96MAKU</footer>
+<!-- Features -->
+<section class="section-feature" id="features">
+    <div class="section-wrap">
+        <p class="section-eyebrow reveal">Features</p>
+        <h2 class="section-heading reveal">デスクトップに、<br>いつでもカレンダーを。</h2>
+        <p class="section-sub reveal">必要なときにすぐ確認できる。操作も直感的。macOSのためにデザインされた、ストレスフリーなカレンダー体験。</p>
+
+        <div class="feature-highlight reveal">
+            <div class="feature-visual">
+                <div class="mock-calendar">
+                    <div class="mock-cal-header">
+                        <span class="mock-cal-month">2025年 2月</span>
+                        <div class="mock-cal-arrows"><span>'</span><span>'</span></div>
+                    </div>
+                    <div class="mock-cal-days">
+                        <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
+                    </div>
+                    <div class="mock-cal-grid">
+                        <div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div>
+                        <div class="mock-day">1</div><div class="mock-day">2</div><div class="mock-day">3</div><div class="mock-day">4</div><div class="mock-day">5</div><div class="mock-day">6</div><div class="mock-day">7</div><div class="mock-day">8</div><div class="mock-day">9</div><div class="mock-day">10</div><div class="mock-day">11</div><div class="mock-day">12</div><div class="mock-day">13</div><div class="mock-day">14</div><div class="mock-day">15</div><div class="mock-day">16</div><div class="mock-day today">17</div><div class="mock-day">18</div><div class="mock-day">19</div><div class="mock-day">20</div><div class="mock-day">21</div><div class="mock-day">22</div><div class="mock-day">23</div><div class="mock-day">24</div><div class="mock-day">25</div><div class="mock-day">26</div><div class="mock-day">27</div><div class="mock-day">28</div>
+                        <div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div><div class="mock-day muted"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-text">
+                <h3>デスクトップに常駐する<br>美しいカレンダー</h3>
+                <p>アプリを開かなくても、デスクトップに常にカレンダーが表示されます。ウィンドウの邪魔にならず、必要な情報にすぐアクセスできます。</p>
+            </div>
+        </div>
+
+        <div class="feature-highlight reveal" style="direction: rtl;">
+            <div class="feature-text" style="direction: ltr;">
+                <h3>トリプルクリックで<br>モード切り替え</h3>
+                <p>トリプルクリックするだけで「編集モード」と「背景モード」を瞬時に切り替え。使いたいときだけ操作可能に、それ以外は背景に溶け込みます。</p>
+            </div>
+            <div class="demo-interaction" style="direction: ltr;">
+                <div class="demo-mode-label">Mode</div>
+                <div class="demo-mode-switch">
+                    <div class="demo-mode-btn active" id="btnEdit">編集モード</div>
+                    <div class="demo-mode-btn" id="btnBg">背景モード</div>
+                </div>
+                <div class="demo-hint">トリプルクリックで切り替え</div>
+                <div class="demo-cursor">
+                    <svg viewBox="0 0 24 24" fill="white"><path d="M4 1L4 18L8.5 13.5L13 21L16 19.5L11.5 12L18 12Z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-mini-grid">
+            <div class="feature-mini reveal reveal-delay-1">
+                <h4>Swiftネイティブ</h4>
+                <p>macOS純正技術で構築。メモリ使用量も最小限で、バッテリーにも優しい設計。</p>
+            </div>
+            <div class="feature-mini reveal reveal-delay-2">
+                <h4>ミニマルUI</h4>
+                <p>情報を見やすく、かつデスクトップの美しさを損なわない洗練されたインターフェース。</p>
+            </div>
+            <div class="feature-mini reveal reveal-delay-3">
+                <h4>完全オフライン</h4>
+                <p>インターネット接続不要。すべてのデータはローカルに保存されます。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Privacy -->
+<section class="section-privacy" id="privacy">
+    <div class="section-wrap">
+        <p class="section-eyebrow reveal">Privacy Policy</p>
+        <h2 class="section-heading reveal">あなたのデータは、<br>あなただけのもの。</h2>
+        <p class="section-sub reveal">ReDesktopCalendarは個人情報を一切収集しません。すべてのデータはお使いのMac上に安全に保管されます。</p>
+
+        <div class="privacy-grid">
+            <div class="privacy-card reveal reveal-delay-1">
+                <div class="privacy-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                </div>
+                <h3>データ収集なし</h3>
+                <p>個人情報の収集・送信を一切行いません。利用状況の追跡も分析も行いません。</p>
+            </div>
+            <div class="privacy-card reveal reveal-delay-2">
+                <div class="privacy-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <h3>ローカル保存</h3>
+                <p>すべてのデータはお使いのMac上にのみ保存。外部サーバーへのデータ転送はありません。</p>
+            </div>
+            <div class="privacy-card reveal reveal-delay-3">
+                <div class="privacy-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                </div>
+                <h3>第三者共有なし</h3>
+                <p>トラッキングツールや広告SDKは一切不使用。データを第三者と共有することはありません。</p>
+            </div>
+            <div class="privacy-card reveal reveal-delay-4">
+                <div class="privacy-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3>お子様の安全</h3>
+                <p>13歳未満のお子様から意図的に個人情報を収集することはありません。</p>
+            </div>
+        </div>
+
+        <div class="privacy-full reveal">
+            <button class="privacy-full-toggle" id="policyToggle" onclick="togglePolicy()">
+                プライバシーポリシー全文を表示
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="privacy-full-body" id="policyBody">
+                <div class="privacy-full-content">
+                    <h4>1. はじめに</h4>
+                    <p>ReDesktopCalendar（以下「本アプリ」）は、96MAKUが開発・提供するmacOS向けデスクトップカレンダーアプリケーションです。本プライバシーポリシーは、本アプリにおける情報の取り扱いについて説明します。</p>
+                    <h4>2. 情報の収集について</h4>
+                    <p>本アプリは、個人情報を含むいかなるユーザーデータも収集、送信、保存（ローカルを除く）しません。カレンダーデータを含むすべての情報は、ユーザーのデバイス上にローカル保存されます。</p>
+                    <h4>3. 情報の利用について</h4>
+                    <p>本アプリはユーザーデータを外部に送信しないため、データの二次利用は一切ありません。</p>
+                    <h4>4. 第三者への提供について</h4>
+                    <p>本アプリは第三者のトラッキングツール、分析ツール、広告SDKを一切使用していません。ユーザーデータを第三者に提供・共有することはありません。</p>
+                    <h4>5. お子様のプライバシーについて</h4>
+                    <p>本アプリは13歳未満のお子様から意図的に個人情報を収集することはありません。</p>
+                    <h4>6. 本ポリシーの変更について</h4>
+                    <p>本プライバシーポリシーは、必要に応じて更新される場合があります。重要な変更がある場合は、アプリのアップデートを通じてお知らせいたします。</p>
+                    <h4>7. お問い合わせ</h4>
+                    <p>本ポリシーに関するご質問がある場合は、以下のサポートセクションに記載の連絡先までお問い合わせください。</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="privacy-note reveal">最終更新日：2025年2月</p>
+    </div>
+</section>
+
+<!-- Support -->
+<section class="section-support" id="support">
+    <div class="section-wrap" style="text-align: center;">
+        <p class="section-eyebrow reveal">Support</p>
+        <h2 class="section-heading reveal">お困りですか？</h2>
+        <p class="section-sub reveal" style="margin-left: auto; margin-right: auto;">ご質問・バグ報告・機能リクエストなど、<br>お気軽にお問い合わせください。</p>
+        <div class="support-box reveal">
+            <div class="support-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <h3>メールでお問い合わせ</h3>
+            <p>通常2〜3営業日以内にご返信いたします。</p>
+            <a href="mailto:support@example.com" class="support-email-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                support@example.com
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <ul class="footer-links">
+        <li><a href="#features">機能</a></li>
+        <li><a href="#privacy">プライバシーポリシー</a></li>
+        <li><a href="#support">サポート</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2025 96MAKU. All rights reserved.</p>
+</footer>
+
+<script>
+    // Hero grid cells
+    const grid = document.getElementById('heroGrid');
+    for (let i = 0; i < 42; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        cell.style.animationDelay = `${0.8 + Math.random() * 1.2}s`;
+        grid.appendChild(cell);
+    }
+
+    // Demo mode switch
+    const btnEdit = document.getElementById('btnEdit');
+    const btnBg = document.getElementById('btnBg');
+    let isEdit = true;
+    setInterval(() => {
+        isEdit = !isEdit;
+        btnEdit.classList.toggle('active', isEdit);
+        btnBg.classList.toggle('active', !isEdit);
+    }, 3000);
+
+    // Privacy toggle
+    function togglePolicy() {
+        const toggle = document.getElementById('policyToggle');
+        const body = document.getElementById('policyBody');
+        const isOpen = body.classList.contains('open');
+        body.classList.toggle('open');
+        toggle.classList.toggle('open');
+        toggle.childNodes[0].textContent = isOpen
+            ? 'プライバシーポリシー全文を表示'
+            : 'プライバシーポリシー全文を閉じる';
+    }
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
 </body>
 </html>
