@@ -24,8 +24,21 @@
             <li><a href="privacy.html">プライバシー</a></li>
             <li><a href="support.html">サポート</a></li>
         </ul>
+        <button class="nav-hamburger" id="navHamburger" aria-label="メニューを開く">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 </nav>
+
+<div class="nav-drawer" id="navDrawer">
+    <ul>
+        <li><a href="index.html#features">機能</a></li>
+        <li><a href="privacy.html">プライバシーポリシー</a></li>
+        <li><a href="support.html">サポート</a></li>
+    </ul>
+</div>
 
 <!-- Page Hero -->
 <div class="page-hero">
@@ -93,6 +106,29 @@
         });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Hamburger menu
+    const hamburger = document.getElementById('navHamburger');
+    const drawer = document.getElementById('navDrawer');
+    if (hamburger && drawer) {
+        hamburger.addEventListener('click', () => {
+            const isOpen = drawer.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            hamburger.setAttribute('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
+        });
+        drawer.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                drawer.classList.remove('open');
+                hamburger.classList.remove('open');
+            });
+        });
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !drawer.contains(e.target)) {
+                drawer.classList.remove('open');
+                hamburger.classList.remove('open');
+            }
+        });
+    }
 </script>
 
 </body>
